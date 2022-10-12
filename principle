@@ -1,0 +1,91 @@
+- rogue-lite / rpg
+
+-> enchaîne les combats rgp sur map
+
+-> gestion de niveau avec caractéristiques
+
+-> gestion armes / capacités
+
+-> but -> atteindre le plus de boss possible
+
+------------------------------------------------------
+
+Classe Personnage (aussi pour les adversaires)
+-attaqueBase
+-défenseBase
+-vitesseBase
+-points de vie
+-niveau
+-arme (peut être null)
+-armure (peut être null)
+-poolCapacités (4)
++attaquer(capacité)
++mourir()
+
+
+Classe Hero extends Personnage
++gagnerXP() {function lvl monstre + boss?}
++mourir() // @override
+
+
+Classe Arme
+-améliorationAttaque
+-nom
+-type (tranchant / contondant / perçant)
+
+
+Classe Armure
+-améliorationDéfense
+-changementVitesse (peut être négatif)
+-nom
+-type (légère / lourde)
+
+
+Classe Capacité
+-nom
+-vitesse
+-attaque
+-type (assassinat (rapide peu forte) / normale (vraie vitesse + atk) / finale (forte et lente) / défense (0 atk + def augmentée))
+
+
+
+----------------------------------------------------------
+
+Classe Etage
+-numéroEtage
+-carteEtage
++Etage(numéro) // constructeur
+
+Classe Carte
+-nombreSalle
+-salleActuelle
++finirSalle(salle)
++changerSalle()
++Carte(nbEtage)
+
+
+Classe Salle
+-type (repos / monstre / boss)
+-adversaire (peut être null)
++combat(hero, adversaire)
+
+
+/////////// CHANGEMENT ETAGE 
+
+-------------------------------------------------------------
+
+Classe Jeu
+(main)
++jouer()
+	def carte + enter 1 salle
+	tant que !mort
+		salle.finirSalle()
+		if(!mort)
+			salle.changerSalle()
+		
+
+
+
+///////////////// FINIR PRINCIPE
+///////////////// VOIR POUR GAGNER EQUIPEMENT
+///////////////// SAUVEGARDER ENTRE DEUX ETAGES
