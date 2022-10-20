@@ -2,10 +2,10 @@ package Items;
 
 import java.util.Random;
 
-public class Armor {
+public class Armor extends Item{
     private int updateDef;
     private int updateSpeed;
-    private ArmorType type;
+    private final ArmorType type;
 
 
 
@@ -13,13 +13,14 @@ public class Armor {
     ////////////////     CONSTRUCTORS     /////////////////////
     ///////////////////////////////////////////////////////////
 
-    public Armor (int updateDef, int updateSpeed, ArmorType type) {
+    public Armor (String name, int updateDef, int updateSpeed, ArmorType type) {
+        this.name = name;
         this.updateSpeed = updateSpeed;
         this.updateDef = updateDef;
         this.type = type;
     }
 
-    public static Armor createRandomArmor(int level, ArmorType type) {
+    public static Armor createRandomArmor(String name, int level, ArmorType type) {
         Random rand = new Random();
         // update for heavy armor
         int minDefHeavy = level;
@@ -35,10 +36,12 @@ public class Armor {
 
         return switch (type) {
             case HEAVY -> new Armor(
+                    name,
                     rand.nextInt(maxDefHeavy - minDefHeavy + 1) + minDefHeavy,
                     -(rand.nextInt(maxSpeedHeavy - minSpeedHeavy + 1) + minSpeedHeavy),
                     type);
             default -> new Armor(
+                    name,
                     rand.nextInt(maxDefLight - minDefLight + 1) + minDefLight,
                     rand.nextInt(maxSpeedLight - minSpeedLight + 1) + minSpeedLight,
                     type);
@@ -52,15 +55,17 @@ public class Armor {
 
     public void displayArmor(){
         System.out.println("Item    : ARMOR");
+        System.out.println("Name    : " + this.name);
         System.out.println("Type    : " + this.type);
         System.out.println("Defense : " + this.updateDef);
         System.out.println("Speed   : " + this.updateSpeed);
 
     }
 
-    ///////////////////////////////////////////////////////////
-    /////////////     GETTERS AND SETTERS     /////////////////
-    ///////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////          GETTERS AND SETTERS          ////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public int getUpdateDef() {
         return updateDef;
     }

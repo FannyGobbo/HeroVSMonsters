@@ -2,7 +2,7 @@ package Items;
 
 import java.util.Random;
 
-public class Weapon {
+public class Weapon extends Item{
     int updateAtk;
     WeaponType type;
 
@@ -11,12 +11,13 @@ public class Weapon {
     ////////////////     CONSTRUCTORS     /////////////////////
     ///////////////////////////////////////////////////////////
 
-    public Weapon (int updateAtk, WeaponType type) {
+    public Weapon (String name, int updateAtk, WeaponType type) {
+        this.name = name;
         this.updateAtk = updateAtk;
         this.type = type;
     }
 
-    public static Weapon createRandomWeapon (int level, WeaponType type) {
+    public static Weapon createRandomWeapon (String name, int level, WeaponType type) {
         Random rand = new Random();
 
         // update attack
@@ -24,6 +25,7 @@ public class Weapon {
         int max = (3 * level) / 2;
 
         return new Weapon(
+                name,
                 rand.nextInt(max - min + 1) + min,
                 type
         );
@@ -36,15 +38,15 @@ public class Weapon {
 
     public void displayWeapon(){
         System.out.println("Item    : WEAPON");
+        System.out.println("Name    : " + this.name);
         System.out.println("Type    : " + this.type);
-        System.out.println("Defense : " + this.updateAtk);
+        System.out.println("Attack  : " + this.updateAtk);
     }
 
 
-    ///////////////////////////////////////////////////////////
-    ////////////     GETTERS AND SETTERS     //////////////////
-    ///////////////////////////////////////////////////////////
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////          GETTERS AND SETTERS          ////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public int getUpdateAtk() {
         return updateAtk;
