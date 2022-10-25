@@ -5,6 +5,8 @@ import Capacities.CapacityPool;
 import Items.Armor;
 import Items.Weapon;
 
+import static Util.GameOutput.damagesDealtLine;
+
 public abstract class Entity {
     protected int baseAtk;
     protected int baseDef;
@@ -17,12 +19,18 @@ public abstract class Entity {
     protected CapacityPool capacityPool;
 
     // TODO add status (like stun, bleed, or boosts)
+    // TODO add dodge statistic
 
 
+    /**
+     * display Entity's information
+     */
+    public abstract void displayEntity();
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////          GETTERS AND SETTERS          ////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////          GETTERS AND SETTERS          ///////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public int getBaseAtk() {
         return baseAtk;
@@ -93,16 +101,16 @@ public abstract class Entity {
     }
 
 
-    ///////////////////////////////////////////////////////////
-    ////////////////     METHODS       ////////////////////////
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////     METHODS       ////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Attack with the specified capacity
      * @param capacity : the capacity used (among the Entity's CapacityPool)
      * @return the amount of damages dealt by the attack
      */
-    public int attack (Capacity capacity) {
+    public int getAttackBaseDamage (Capacity capacity) {
         return (int) ((this.baseAtk + this.weapon.getUpdateAtk()) * capacity.getUpdateAtk());
     }
 
@@ -120,18 +128,25 @@ public abstract class Entity {
      * @param opponent : the Entity's opponent
      * @param opponentsAttack : the attack dealt by the opponent using the method attack
      *                        /!\ NEED TO BE POSITIVE
+     * @param ownCapacity : the capacity used by the Entity
      * @return the real damages dealt by the opponent's attack to the Entity
      */
-    public int damageCalculation (Entity opponent, int opponentsAttack) {
+    public int damageCalculation (Entity opponent, int opponentsAttack, Capacity ownCapacity) {
         return switch (opponent.getWeapon().getType()) {
-            case PIECRING   -> (int)Math.max(opponentsAttack - this.armor.getUpdateDef() / 2, 0);
-            case SHARP      -> Math.max(opponentsAttack - this.armor.getUpdateDef() + opponent.level,0);
-            default         -> Math.max(opponentsAttack - this.armor.getUpdateDef(),0);
+            case PIECRING   -> (int)Math.max(opponentsAttack - this.armor.getUpdateDef() * ownCapacity.getUpdateDef() / 2, 0);
+            case SHARP      -> (int) Math.max(opponentsAttack - this.armor.getUpdateDef() * ownCapacity.getUpdateDef() + opponent.level,0);
+            default         -> (int) Math.max(opponentsAttack - this.armor.getUpdateDef() * ownCapacity.getUpdateDef(),0);
         };
     }
 
     /**
-     * Idicate if the Entity is still alive
+     * make an Entity use a capacity
+     * @return the Capacity used by the Entity or null if an error has occured
+     */
+    public abstract Capacity useCapacity();
+
+    /**
+     * Indicate if the Entity is still alive
      * @return true if the Entity is still alive
      */
     public boolean isStillAlive () {
@@ -153,9 +168,27 @@ public abstract class Entity {
     /**
      * Damage the Entity with the specified amount of life points
      * @param numberLP the amount of life points dealt to the entity
- *                 /!\ NEED TO BE POSITIVE
+     *                 /!\ NEED TO BE POSITIVE
      */
     public void getHurt (int numberLP) {
         this.currentLifePoints = this.currentLifePoints - numberLP;
+    }
+
+    /**
+     * make the Entity attack its opponent
+     * @param attackerCapacity The capacity used by the Entity
+     * @param defender  The opponent
+     * @param defenderCapacity The capacity used by the opponent
+     */
+    public void attackOpponent (Capacity attackerCapacity, Entity defender, Capacity defenderCapacity){
+        int attackerAtk;
+
+        attackerAtk = defender.damageCalculation(this, this.getAttackBaseDamage(attackerCapacity), defenderCapacity);
+        if (attackerAtk > 0) {
+            defender.getHurt(attackerAtk);
+            damagesDealtLine(attackerAtk);
+        } else {
+            damagesDealtLine(0);
+        }
     }
 }

@@ -1,30 +1,23 @@
 package Game;
 
-import Entities.Hero;
+import Dungeon.Dungeon;
+import Entities.*;
 import Items.*;
 import static Items.ArmorType.*;
 import static Items.WeaponType.*;
+import static Util.GameOutput.heroCreationScreen;
+import static Util.Util.*;
 
 public class Play {
     public static void main(String[] args) {
+        // to uncomment to play
+        // Hero hero = Hero.createHero();
 
-        // test creation armor
-        /*
-        Armor armor = Armor.createRandomArmor(5, HEAVY);
-        armor.displayArmor();
-        */
+        // gameplay test
+        Hero hero = new Hero(9,9,9,15);
 
-        // test creation weapon
-        /*
-        Weapon weapon = Weapon.createRandomWeapon(5, SHARP);
-        weapon.displayWeapon();
-         */
+        Dungeon dungeon = new Dungeon(hero);
 
-        // test creation hero
-        Hero hero = new Hero(5, 5, 2, 10);
-        hero.displayHero();
-        hero.getArmor().displayArmor();
-        hero.getWeapon().displayWeapon();
-
+        dungeon.run(hero);
     }
 }

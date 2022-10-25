@@ -69,4 +69,6 @@ public class CapacityPool {
     public static Capacity getDefense() {
         return defense;
     }
+
+    // TODO add setters to change capacities
 }
